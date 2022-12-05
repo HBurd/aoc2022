@@ -2,6 +2,7 @@ Advent of Code 2022
 ===================
 
 I will attempt to use a different language every day.
+`languages.txt` contains an arbitrary list of languages that I'm allowed to use.
 
 | Day | Language     |
 | --- | ------------ |
