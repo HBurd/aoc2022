@@ -1,0 +1,44 @@
+# Used so far:
+#  C++
+#  Rust
+#  x86 assembly
+#  Standard ML
+
+# Remaining choices:
+Ocaml
+Ada
+ARM assembly
+Odin
+Bash
+Perl
+Lisp
+VHDL
+D
+Typescript
+Haskell
+Nim
+Go
+Tcl
+FORTRAN
+Python
+BASIC
+Idris
+Pascal
+Matlab (Octave)
+Verilog
+
+
+# Decided against for various reasons
+#  C#
+#  Java
+#  Ruby
+#  PHP
+#  Julia
+#  R
+#  Swift
+#  Matlab
+#  Objective C
+#  Visual BASIC
+#  Smalltalk
+#  Coq
+#  INTERCAL
