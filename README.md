@@ -14,3 +14,4 @@ This was driving me insane. Going to stick with Rust until I feel like switching
 |  4  | Standard ML  |
 |  5  | Rust         |
 |  6  | Rust         |
+|  7  | Rust         |
