@@ -13,3 +13,4 @@ This was driving me insane. Going to stick with Rust until I feel like switching
 |  3  | x86 Assembly |
 |  4  | Standard ML  |
 |  5  | Rust         |
+|  6  | Rust         |
