@@ -1,0 +1,19 @@
+Rocks: 1741
+Height: 2764
+Rocks: 1715
+Height: 2690
+Rocks: 1715
+Height: 2690
+Rocks: 1715
+Height: 2690
+Rocks: 1715
+Height: 2690
+
+
+
+
+1741 rocks fall initially (height of 2764)
+then 583090377 sets of 1715 rocks fall (height of 583090377 * 2690 = 1568513114130)
+then 1704 rocks still need to fall (height of 2678)
+
+-1 for initial off-by-one error

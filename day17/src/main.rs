@@ -12,11 +12,7 @@ fn move_rock(rock: &Vec<(usize, usize)>, row_offset: &mut usize, col_offset: &mu
 
         let index = 7 * new_row as usize + new_col as usize;
 
-        if index >= arena.len()
-        {
-            break;
-        }
-        else if arena[index]
+        if index < arena.len() && arena[index]
         {
             return false;
         }
@@ -28,27 +24,15 @@ fn move_rock(rock: &Vec<(usize, usize)>, row_offset: &mut usize, col_offset: &mu
     return true;
 }
 
-fn move_rock_fast(rock: &Vec<(usize, usize)>, col_offset: &mut usize, col_delta: isize, width: usize) -> bool
-{
-    if *col_offset as isize + col_delta < 0 || (*col_offset as isize + col_delta + width as isize) > 7
-    {
-        return false;
-    }
-
-    *col_offset = (*col_offset as isize + col_delta) as usize;
-
-    return true;
-}
-
 fn add_rock(arena: &mut Vec<bool>, jetstream: &mut Jetstream, rock: &Vec<(usize, usize)>, width: usize)
 {
     let mut col_offset = 2;
     let mut row_offset = arena.len() / 7;
 
-    move_rock_fast(rock, &mut col_offset, jetstream.next(), width);
-    move_rock_fast(rock, &mut col_offset, jetstream.next(), width);
-    move_rock_fast(rock, &mut col_offset, jetstream.next(), width);
-    move_rock_fast(rock, &mut col_offset, jetstream.next(), width);
+    move_rock(rock, &mut row_offset, &mut col_offset, 0, jetstream.next(), arena);
+    move_rock(rock, &mut row_offset, &mut col_offset, 0, jetstream.next(), arena);
+    move_rock(rock, &mut row_offset, &mut col_offset, 0, jetstream.next(), arena);
+    move_rock(rock, &mut row_offset, &mut col_offset, 0, jetstream.next(), arena);
 
     while move_rock(rock, &mut row_offset, &mut col_offset, -1, 0, arena)
     {
@@ -118,7 +102,8 @@ fn main() {
     let rock_widths = [4, 3, 3, 1, 2];
 
     let mut next_rock = 0;
-    let mut rocks_remaining: u64 = 1_000_000_000_000;
+    let mut rock_cnt = 0;
+    let max_rocks: u64 = 1_000_000_000_000;
     let mut arena = vec![true; 7];
     arena.reserve(1024 * 1024 * 128);   // reserve 128Mb
     let mut jetstream = Jetstream {
@@ -136,29 +121,27 @@ fn main() {
         index: 0
     };
 
-    let mut extra_height = 0;
+    let mut last_height = 0;
 
-    while rocks_remaining > 0
+    while rock_cnt < max_rocks
     {
+        if jetstream.index == 2
+        {
+            println!("Rocks: {}", rock_cnt);
+            println!("Height: {}", arena.len() / 7 - last_height);
+            rock_cnt = 0;
+            last_height = arena.len() / 7;
+        }
+
+        if rock_cnt == 1704
+        {
+            println!("1704 height: {}", arena.len() / 7 - last_height);
+        }
+
         add_rock(&mut arena, &mut jetstream, &rocks[next_rock], rock_widths[next_rock]);
         next_rock = (next_rock + 1) % rocks.len();
-        rocks_remaining -= 1;
-
-        if arena.len() >=  1024 * 1024 * 128
-        {
-            // grab the last 512 lines (arbitrary)
-            let mut new_vec = Vec::new();
-            new_vec.reserve(1024 * 1024 * 128);
-            new_vec.resize(512 * 7, false);
-            new_vec[..].clone_from_slice(&arena[arena.len() - 512 * 7..]);
-            extra_height += arena.len() / 7 - 512;
-            arena = new_vec;
-
-            println!("{}", rocks_remaining);
-        }
-        //print_arena(&arena);
-        //println!();
+        rock_cnt += 1;
     }
 
-    println!("{}", arena.len() / 7 + extra_height);
+    println!("{}", arena.len() / 7);
 }
