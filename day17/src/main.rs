@@ -1,31 +1,3 @@
-fn print_rock(rock: &Vec<(usize, usize)>)
-{
-    let mut idx = 0;
-
-    for row in 0..10
-    {
-        for col in 0..10
-        {
-            if idx < rock.len() && row == rock[idx].0 && col == rock[idx].1
-            {
-                idx += 1;
-                print!("#");
-            }
-            else
-            {
-                print!(".");
-            }
-        }
-
-        println!();
-
-        if idx >= rock.len()
-        {
-            return;
-        }
-    }
-}
-
 fn move_rock(rock: &Vec<(usize, usize)>, row_offset: &mut usize, col_offset: &mut usize, row_delta: isize, col_delta: isize, arena: &Vec<bool>) -> bool
 {
     for (row, col) in rock.iter()
@@ -40,7 +12,11 @@ fn move_rock(rock: &Vec<(usize, usize)>, row_offset: &mut usize, col_offset: &mu
 
         let index = 7 * new_row as usize + new_col as usize;
 
-        if index < arena.len() && arena[index]
+        if index >= arena.len()
+        {
+            break;
+        }
+        else if arena[index]
         {
             return false;
         }
@@ -52,15 +28,27 @@ fn move_rock(rock: &Vec<(usize, usize)>, row_offset: &mut usize, col_offset: &mu
     return true;
 }
 
-fn add_rock(arena: &mut Vec<bool>, jetstream: &mut Jetstream, rock: &Vec<(usize, usize)>)
+fn move_rock_fast(rock: &Vec<(usize, usize)>, col_offset: &mut usize, col_delta: isize, width: usize) -> bool
+{
+    if *col_offset as isize + col_delta < 0 || (*col_offset as isize + col_delta + width as isize) > 7
+    {
+        return false;
+    }
+
+    *col_offset = (*col_offset as isize + col_delta) as usize;
+
+    return true;
+}
+
+fn add_rock(arena: &mut Vec<bool>, jetstream: &mut Jetstream, rock: &Vec<(usize, usize)>, width: usize)
 {
     let mut col_offset = 2;
     let mut row_offset = arena.len() / 7;
 
-    move_rock(rock, &mut row_offset, &mut col_offset, 0, jetstream.next(), arena);
-    move_rock(rock, &mut row_offset, &mut col_offset, 0, jetstream.next(), arena);
-    move_rock(rock, &mut row_offset, &mut col_offset, 0, jetstream.next(), arena);
-    move_rock(rock, &mut row_offset, &mut col_offset, 0, jetstream.next(), arena);
+    move_rock_fast(rock, &mut col_offset, jetstream.next(), width);
+    move_rock_fast(rock, &mut col_offset, jetstream.next(), width);
+    move_rock_fast(rock, &mut col_offset, jetstream.next(), width);
+    move_rock_fast(rock, &mut col_offset, jetstream.next(), width);
 
     while move_rock(rock, &mut row_offset, &mut col_offset, -1, 0, arena)
     {
@@ -127,11 +115,7 @@ fn main() {
         vec![(0, 0), (0, 1), (1, 0), (1, 1)],
     ];
 
-    for rock in rocks.iter()
-    {
-        print_rock(&rock);
-        println!();
-    }
+    let rock_widths = [4, 3, 3, 1, 2];
 
     let mut next_rock = 0;
     let mut rocks_remaining: u64 = 1_000_000_000_000;
@@ -156,7 +140,7 @@ fn main() {
 
     while rocks_remaining > 0
     {
-        add_rock(&mut arena, &mut jetstream, &rocks[next_rock]);
+        add_rock(&mut arena, &mut jetstream, &rocks[next_rock], rock_widths[next_rock]);
         next_rock = (next_rock + 1) % rocks.len();
         rocks_remaining -= 1;
 
