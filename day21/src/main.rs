@@ -1681,6 +1681,4 @@ const vzcr: i128 = jmqh + zbbf;
 fn main() {
     println!("{}", root);
     println!("{}", humn);
-    //println!("bsbd: {}\nfcgj: {}", bsbd, fcgj);
-    //println!("{}",  if bsbd == fcgj { "Success!" } else { "Fail :(" });
 }
